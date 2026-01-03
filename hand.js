@@ -16,9 +16,11 @@ export async function initHand() {
   await video.play();
 
   const hands = new Hands({
-    locateFile: f =>
-      `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`
-  });
+  locateFile: (file) => {
+    return `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`;
+  }
+});
+
 
   hands.setOptions({
     maxNumHands: 1,
@@ -64,3 +66,4 @@ export async function initHand() {
 
   loop();
 }
+

@@ -1,17 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Gesture Particles</title>
+
   <style>
-    body { margin: 0; overflow: hidden; background: black; }
-    video { display: none; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+    }
+
+    video {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      width: 160px;
+      opacity: 0.15;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    canvas {
+      display: block;
+    }
   </style>
 </head>
+
 <body>
 
-<video id="video" autoplay playsinline></video>
+  <!-- THIS IS CRITICAL -->
+  <video
+    id="video"
+    autoplay
+    playsinline
+    muted
+  ></video>
 
-<script type="module" src="main.js"></script>
+  <script type="module" src="main.js"></script>
+
 </body>
 </html>

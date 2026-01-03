@@ -1,6 +1,5 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158/build/three.module.js';
 import { Hands } from 'https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js';
-import { Camera } from 'https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js';
 
 export const handState = {
   scale: 1,
@@ -8,11 +7,17 @@ export const handState = {
   openness: 0
 };
 
-export function initHand() {
+export async function initHand() {
   const video = document.getElementById('video');
 
+  // Start webcam (native, reliable)
+  const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+  video.srcObject = stream;
+  await video.play();
+
   const hands = new Hands({
-    locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`
+    locateFile: f =>
+      `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`
   });
 
   hands.setOptions({
@@ -25,7 +30,7 @@ export function initHand() {
 
   hands.onResults(results => {
     const now = performance.now();
-    if (now - lastTime < 50) return; // 20 FPS
+    if (now - lastTime < 50) return; // throttle to 20 FPS
     lastTime = now;
 
     if (!results.multiHandLandmarks) return;
@@ -52,12 +57,10 @@ export function initHand() {
     );
   });
 
-  const cam = new Camera(video, {
-    onFrame: async () => hands.send({ image: video }),
-    width: 640,
-    height: 480
-  });
+  async function loop() {
+    await hands.send({ image: video });
+    requestAnimationFrame(loop);
+  }
 
-  cam.start();
+  loop();
 }
-

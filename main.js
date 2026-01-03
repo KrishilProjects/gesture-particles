@@ -1,6 +1,4 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158/build/three.module.js';
-import { initHand, handState } from './hand.js';
-import { ParticleSystem } from './particles.js';
 
 const scene = new THREE.Scene();
 
@@ -12,23 +10,33 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.z = 5;
 
-const renderer = new THREE.WebGLRenderer({ antialias: false });
+const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(1); // LOW-END SAFE
 document.body.appendChild(renderer.domElement);
 
-const particles = new ParticleSystem(scene);
-initHand();
+const geometry = new THREE.BufferGeometry();
+const count = 2000;
+const positions = new Float32Array(count * 3);
 
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+for (let i = 0; i < count; i++) {
+  positions[i * 3] = (Math.random() - 0.5) * 3;
+  positions[i * 3 + 1] = (Math.random() - 0.5) * 3;
+  positions[i * 3 + 2] = (Math.random() - 0.5) * 3;
+}
+
+geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+const material = new THREE.PointsMaterial({
+  size: 0.05,
+  color: 0xff00ff
 });
+
+const points = new THREE.Points(geometry, material);
+scene.add(points);
 
 function animate() {
   requestAnimationFrame(animate);
-  particles.update(handState);
+  points.rotation.y += 0.002;
   renderer.render(scene, camera);
 }
 

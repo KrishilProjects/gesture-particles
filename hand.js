@@ -1,3 +1,4 @@
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158/build/three.module.js';
 import { Hands } from 'https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js';
 import { Camera } from 'https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js';
 
@@ -59,3 +60,4 @@ export function initHand() {
 
   cam.start();
 }
+
